@@ -46,20 +46,22 @@ from core.accounting_map import ACCOUNT_MAP
 
 library = IOLibrary(name="bookkeeping")
 
-def mapped_blueprint(event, amount, description):
+def mapped_blueprint(event, amount,debit_acnt,credit_acnt, description):
     bp = IOBluePrint()
     mapping = ACCOUNT_MAP[event]
 
-    bp.debit(mapping["debit"], amount, description)
-    bp.credit(mapping["credit"], amount, description)
+    bp.debit(debit_acnt, amount, description)
+    bp.credit(credit_acnt, amount, description)
     return bp
 
 
 @library.register
-def owner_investment(amount):
+def owner_investment(debit_acnt,credit_acnt,amount):
     return mapped_blueprint(
         "OWNER_INVESTMENT",
         amount,
+        debit_acnt,
+        credit_acnt,
         "Owner cash contribution",
     )
 

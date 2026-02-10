@@ -5,9 +5,6 @@ import django
 import logging
 from typing import Dict
 
-from .tools.fetch_coa import fetch_entity_chart_of_accounts
-from .agent import coa_mapping_agent
-
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
@@ -21,25 +18,8 @@ def ensure_django():
         )
         sys.path.insert(0, BASE_DIR)
 
-        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bookkeeping.settings")
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bookkeeping.bookkeeping.settings")
         django.setup()
-
-def map_transaction_for_entity(*, entity, validated_transaction: Dict) -> Dict:
-    """
-    End-to-end COA mapping for a validated transaction.
-
-    Steps:
-    1. Fetch entity-bound Chart of Accounts (tool)
-    2. Send transaction + COA JSON to mapping agent
-    3. Return mapping suggestions
-    """
-    chart_of_accounts = fetch_entity_chart_of_accounts(entity)
-
-    return coa_mapping_agent(
-        transaction=validated_transaction,
-        chart_of_accounts=chart_of_accounts,
-    )
-
 
 def main():
     """
@@ -52,6 +32,9 @@ def main():
     
     from django.contrib.auth import get_user_model
     from django_ledger.models.entity import EntityModel
+    from bookkeeping.core.agents.agentic_leder.coa_mapping.agent import (
+        map_transaction_for_entity,
+    )
 
     User = get_user_model()
     user = User.objects.first()
@@ -74,9 +57,7 @@ def main():
     path = r"D:\Django ledger\initial_transaction.json"
     with open(path,"r") as f:
         transaction = json.load(f)
-        
-    print(transaction)
-    print()
+    
     logger.info("Running COA Mapping Service...")
 
     mapping_result = map_transaction_for_entity(

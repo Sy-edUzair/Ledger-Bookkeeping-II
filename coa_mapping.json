@@ -1,0 +1,19 @@
+{
+  "primary": {
+    "debit_account": {
+      "account_id": "6b94f779-b4d9-4fbc-99b6-42066c3a8c76",
+      "account_name": "Cash",
+      "account_code": 1000,
+      "account_role": "asset_ca_cash",
+      "account_class": "ASSET"
+    },
+    "credit_account": {
+      "account_id": "45e5ec29-eab9-41be-9d8e-cc72c4feab1d",
+      "account_name": "Owner Capital",
+      "account_code": 3000,
+      "account_role": "eq_capital",
+      "account_class": "EQUITY"
+    }
+  },
+  "alternatives": []
+}

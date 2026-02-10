@@ -14,12 +14,9 @@ from bookkeeping.core.settings import AppConfig
 settings = AppConfig()
 logger = logging.getLogger(__name__)
 
-# -------------------------
-# Schema
-# -------------------------
-
 class JournalLine(BaseModel):
-    account_id: int
+    account_id: str
+    account_code: str
     side: Literal["DEBIT", "CREDIT"]
     amount: float
 
@@ -31,9 +28,6 @@ journal_parser = PydanticOutputParser(
     pydantic_object=JournalEntryPayload
 )
 
-# -------------------------
-# Builder
-# -------------------------
 
 def build_journal_chain(llm):
     prompt = ChatPromptTemplate.from_messages(
@@ -52,15 +46,8 @@ def build_journal_chain(llm):
 
     return prompt | llm | StrOutputParser()
 
-# -------------------------
-# Public Helper
-# -------------------------
 
-def build_journal_entry(
-    transaction: dict,
-    debit_account: dict,
-    credit_account: dict,
-) -> dict:
+def build_journal_entry(transaction: dict,debit_account: dict,credit_account: dict,) -> dict:
     """
     Builds a structured journal entry payload.
     NO posting, NO validation.

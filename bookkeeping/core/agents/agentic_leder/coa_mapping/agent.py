@@ -1,5 +1,7 @@
 import logging
 from .helper import map_transaction_to_coa
+from .tools.fetch_coa import fetch_entity_chart_of_accounts
+from typing import Dict
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -23,7 +25,22 @@ def coa_mapping_agent(transaction: dict, chart_of_accounts: list[dict]) -> dict:
 
     return result
 
+def map_transaction_for_entity(*, entity, validated_transaction: Dict) -> Dict:
+    """
+    End-to-end COA mapping for a validated transaction.
 
+    Steps:
+    1. Fetch entity-bound Chart of Accounts (tool)
+    2. Send transaction + COA JSON to mapping agent
+    3. Return mapping suggestions
+    """
+    chart_of_accounts = fetch_entity_chart_of_accounts(entity)
+
+    return coa_mapping_agent(
+        transaction=validated_transaction,
+        chart_of_accounts=chart_of_accounts,
+    )
+    
 if __name__ == "__main__":
     import json
 
