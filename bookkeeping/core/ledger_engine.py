@@ -42,13 +42,11 @@
 # core/ledger_engine.py
 
 from django_ledger.io.io_library import IOLibrary, IOBluePrint
-from core.accounting_map import ACCOUNT_MAP
 
 library = IOLibrary(name="bookkeeping")
 
-def mapped_blueprint(event, amount,debit_acnt,credit_acnt, description):
+def mapped_blueprint(amount,debit_acnt,credit_acnt, description):
     bp = IOBluePrint()
-    mapping = ACCOUNT_MAP[event]
 
     bp.debit(debit_acnt, amount, description)
     bp.credit(credit_acnt, amount, description)
@@ -58,7 +56,6 @@ def mapped_blueprint(event, amount,debit_acnt,credit_acnt, description):
 @library.register
 def owner_investment(debit_acnt,credit_acnt,amount):
     return mapped_blueprint(
-        "OWNER_INVESTMENT",
         amount,
         debit_acnt,
         credit_acnt,
@@ -66,27 +63,36 @@ def owner_investment(debit_acnt,credit_acnt,amount):
     )
 
 
-@library.register
-def cash_sale(amount):
-    return mapped_blueprint(
-        "CASH_SALE",
-        amount,
-        "Service revenue",
-    )
+# @library.register
+# def cash_sale(amount):
+#     return mapped_blueprint(
+#         "CASH_SALE",
+#         amount,
+#         "Service revenue",
+#     )
 
 
-@library.register
-def pay_rent(amount):
-    return mapped_blueprint(
-        "PAY_RENT",
-        amount,
-        "Office rent",
-    )
+# @library.register
+# def pay_rent(amount):
+#     return mapped_blueprint(
+#         "PAY_RENT",
+#         amount,
+#         "Office rent",
+#     )
 
+# @library.register
+# def receive_vendor_bill(amount):
+#     return mapped_blueprint(
+#         "RECEIVE_VENDOR_BILL",
+#         amount,
+#         "Vendor bill received (rent)",
+#     )
+    
 @library.register
-def receive_vendor_bill(amount):
+def generic_entry(debit_acnt,credit_acnt,amount):
     return mapped_blueprint(
-        "RECEIVE_VENDOR_BILL",
         amount,
-        "Vendor bill received (rent)",
+        debit_acnt,
+        credit_acnt,
+        "Generic entry",
     )
