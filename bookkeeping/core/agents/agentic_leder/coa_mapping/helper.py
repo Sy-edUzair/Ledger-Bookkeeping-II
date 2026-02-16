@@ -4,7 +4,7 @@ from typing import List, Literal
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser, PydanticOutputParser
 from pydantic import BaseModel, Field
-from core.settings import AppConfig
+from bookkeeping.core.settings import AppConfig
 from .prompts import system_prompt_coa_mapping_agent, human_prompt_coa_mapping_agent
 
 settings = AppConfig()

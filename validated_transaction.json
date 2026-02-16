@@ -1,4 +1,11 @@
 {
     "errors": [],
-    "warnings": []
+    "warnings": [
+        {
+            "field": "transaction_type",
+            "message": "Transaction type should be classified as ASSET instead of EQUITY for an initial capital investment.",
+            "severity": "MEDIUM",
+            "suggested_fix": "Change transaction_type to ASSET."
+        }
+    ]
 }
